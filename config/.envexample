@@ -1,0 +1,3 @@
+SECRET_KEY=your_secret_key_here
+DEBUG=TRUE
+CONNECTION_STRING=mongodb+srv://user:password@cluster_name.fom5m.mongodb.net/collection_name?retryWrites=true&w=majority
