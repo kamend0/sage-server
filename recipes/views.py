@@ -3,7 +3,6 @@ from django.http import JsonResponse
 import pymongo
 import environ
 import re
-# import pandas as pd
 
 
 ##################
@@ -12,11 +11,10 @@ import re
 
 env = environ.Env()
 environ.Env.read_env()
-# environ.Env.read_env('../config/.env')
 
 client = pymongo.MongoClient(env("CONNECTION_STRING"))
-db = client['recipesApp']
-recipes = db['recipes']
+db = client['recipes-1'] # Database
+recipes = db['recipes-detail'] # Collection (MongoDB version of table)
 
 
 ##################
@@ -52,6 +50,7 @@ def get_recipes_from_db(ing_list):
         recipe_results[index] = {'title' : recipe['title'],
                                  'ingredients' : recipe['ingredients'],
                                  'instructions' : recipe['instructions'],
+                                 'imageName' : recipe['imageName'],
                                  'match' : match_score}
 
     return recipe_results
@@ -66,14 +65,7 @@ def get_recipes_from_db(ing_list):
 
 def get_unordered_recipes(request):
     ingredients = (request.GET.get('ingredients', '')).split(",")
-    try:
-        if ((request.GET.get('order', '')).lower() == "true"):
-            order_result = True
-        else:
-            order_result = False
-    except:
-        order_result = False
     
     matching_recipes = get_recipes_from_db(ing_list = ingredients)
 
-    return JsonResponse(matching_recipes, safe = False)
+    return JsonResponse(matching_recipes, safe = True)
